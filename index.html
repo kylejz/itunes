@@ -15,9 +15,14 @@
           </div>
           <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
-              <input type="text" class="form-control" ng-model="artist" placeholder="Artist Name" >
-              <button class="btn btn-primary" ng-click="getSongData()"> Submit </button>
+              <input type="text" class="form-control" ng-model="artist" placeholder="What are you looking for?" >
+              <select class="form-control" ng-model="mediaType" ng-options="item.mean as item.show for item in mediaOptions"></select> 
+              <button class="btn btn-primary" ng-click="getSongData(artist, mediaType)"> Submit </button>
             </div>
+          
+          <input type="text" class="form-control" ng-model="filterOptions.filters" placeholder="Filter results?" >
+          <select class="form-control" ng-model="filterOptions.otherFilters" ng-options="item.mean as item.show for item in filterInputs"></select>
+
           </form>
         </div>
       </div>

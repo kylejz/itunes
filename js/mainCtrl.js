@@ -4,6 +4,18 @@ app.controller('mainCtrl', function($scope, itunesService){
   //This is setting up the default behavior of our ng-grid. The important thing to note is
   //the 'data' property. The value is 'songData'. That means ng-grid is looking for songData on $scope and is putting whatever songData is into the grid.
   //this means when you make your iTunes request, you'll need to get back the information, parse it accordingly, then set it to songData on the scope -> $scope.songData = ...
+  
+  $scope.filterOptions = {
+    filters: '',
+    // otherFilters: '',
+    // useExternalFilter: false
+  }
+
+
+
+
+
+
   $scope.gridOptions = { 
       data: 'songData',
       height: '110px',
@@ -11,13 +23,80 @@ app.controller('mainCtrl', function($scope, itunesService){
       columnDefs: [
         {field: 'Play', displayName: 'Play', width: '40px', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><a href="{{row.getProperty(col.field)}}"><img src="http://www.icty.org/x/image/Miscellaneous/play_icon30x30.png"></a></div>'},
         {field: 'Artist', displayName: 'Artist'},
+        {field: 'Title', displayName: 'Title'},
         {field: 'Collection', displayName: 'Collection'},
         {field: 'AlbumArt', displayName: 'Album Art', width: '110px', cellTemplate: '<div class="ngCellText" ng-class="col.colIndex()"><img src="{{row.getProperty(col.field)}}"></div>'},
         {field: 'Type', displayName: 'Type'},
         {field: 'CollectionPrice', displayName: 'Collection Price'},
-      ]
+      ],
+      filterOptions: $scope.filterOptions
   };
 
+  $scope.mediaOptions = [
+  {
+    show: 'Movies',
+    mean: 'movie'
+  },
+  {
+    show: 'Podcasts',
+    mean: 'podcast'
+  },
+  {
+    show: 'Music',
+    mean: 'music'
+  },
+  {
+    show: 'Music Videos',
+    mean: 'musicVideo'
+  },
+  {
+    show: 'Audiobooks',
+    mean: 'audiobook'
+  },
+  {
+    show: 'Short Films',
+    mean: 'shortFilm'
+  },
+  {
+    show: 'TV Shows',
+    mean: 'tvShow'
+  },
+  {
+    show: 'Software',
+    mean: 'software'
+  },
+  {
+    show: 'Ebooks',
+    mean: 'ebook'
+  },
+  {
+    show: 'Everything',
+    mean: 'all'
+  },
+  ];
+
+  $scope.filterInputs = [
+  {
+    show: 'Artist',
+    value: 'Artist'
+  },
+  {
+    show: 'Title',
+    value: 'Title'
+  },
+  {
+    show: 'Collection',
+    value: 'Collection'
+  },
+  {
+    show: 'Type',
+    value: 'Type'
+  },
+  {
+    show: 'Collection Price',
+    value: 'CollectionPrice'
+  },
+  ]
   //Our controller is what's going to connect our 'heavy lifting' itunesService with our view (index.html) so our user can see the results they get back from itunes.
 
   //First inject itunesService into your controller.
@@ -30,6 +109,17 @@ app.controller('mainCtrl', function($scope, itunesService){
   //Also note that that method should be retuning a promise, so you could use .then in this function.
     
     //Code here
+
+  $scope.getSongData = function(artist, mediaType) {
+    if(!mediaType) {
+      mediaType = 'all'
+    }
+
+    itunesService.getMusicData(artist, mediaType).then(function(response) {
+      $scope.songData = response;
+    })
+
+  }
 
 
   //Check that the above method is working by entering a name into the input field on your web app, and then console.log the result
